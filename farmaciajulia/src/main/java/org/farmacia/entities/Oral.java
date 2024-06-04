@@ -6,8 +6,8 @@ public class Oral extends Remedio{
     public String modo_de_uso ;
     public String dosagem ;
 
-    public Oral(String nome_remedio, LocalDate data_vencimento, Float preco, int quantidade_estoque, Float concentracao, String modo_de_uso, String dosagem) {
-        super(nome_remedio, data_vencimento, preco, quantidade_estoque, concentracao);
+    public Oral(String nome_remedio, LocalDate data_vencimento, Float preco, int quantidade_estoque, Float concentracao, Substancia substancia, String modo_de_uso, String dosagem) {
+        super(nome_remedio, data_vencimento, preco, quantidade_estoque, concentracao, substancia);
         this.modo_de_uso = modo_de_uso;
         this.dosagem = dosagem;
     }
@@ -37,6 +37,7 @@ public class Oral extends Remedio{
                 ", preco=" + preco +
                 ", quantidade_estoque=" + quantidade_estoque +
                 ", concentracao=" + concentracao +
+                ", substancia=" + substancia +
                 ", modo_de_uso='" + modo_de_uso + '\'' +
                 '}';
     }

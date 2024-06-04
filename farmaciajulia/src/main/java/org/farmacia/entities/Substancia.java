@@ -19,11 +19,11 @@ public class Substancia {
         this.meuTipo = meuTipo;
     }
 
-    public String getNome() {
+    public String getNome_substancia() {
         return nome_substancia;
     }
 
-    public void setNome(String nome) {
+    public void setNome_substancia(String nome) {
         this.nome_substancia = nome;
     }
 
