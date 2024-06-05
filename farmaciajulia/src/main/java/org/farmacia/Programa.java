@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
+public class Programa {
     public static void main(String[] args) throws InterruptedException {
 
         // Criando substâncias para uso nos remédios
@@ -29,7 +29,7 @@ public class Main {
         RemedioRepository.save(remedioOral);
         RemedioRepository.save(remedioInjetavel);
         RemedioRepository.save(remedioTopico);
-    /*
+/*
     //_________________________________________________________________________________________________________________________________________
         System.out.println("  _____                                             _             _   _           _    __                      ");
         Thread.sleep(500);
@@ -57,8 +57,8 @@ public class Main {
         // Interface Interativa com Usuário -> Menu.java
         Thread.sleep(500);
 
-     */
-         Menu.menuInicial();
+*/
+        Menu.menuInicial();
 
 
     }

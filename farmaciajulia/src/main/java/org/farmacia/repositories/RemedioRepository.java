@@ -26,7 +26,6 @@ public class RemedioRepository {
                 remediosPesquisados.add(remedio);
             }
         }
-        System.out.println(remediosPesquisados);
         return remediosPesquisados;
     }
 //______________________________________________________________________________________________________________
@@ -51,7 +50,6 @@ public class RemedioRepository {
             remediosEncontrados.add(remedio);
             }
         }
-        System.out.println(remediosEncontrados);
         return remediosEncontrados;
     }
 //____________________________________________________________________________________________________________

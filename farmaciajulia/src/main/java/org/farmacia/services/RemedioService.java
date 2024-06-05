@@ -18,7 +18,112 @@ RemedioService {
 
 
 
-//BARRA DE PESQUISA -> Achar o remedio com o nome digitado ____________________________________________________
+//CADASTRO -> Cadastrar Remedio ____________________________________________________
+public static void cadastrarRemedio(Scanner sc) {
+    int quantidade = -1;
+    float concentracao = -1;
+    float preco = -1;
+    System.out.println("-- CADASTRAR NOVO REMÉDIO --");
+    ArrayList<Substancia> sub = new ArrayList<>();
+    while (true) {
+        try {
+            SubstanciaService.listarSubstancias();
+            System.out.print("Digite o nome da substância do remédio: ");
+            String subName = sc.nextLine();
+            ArrayList<Substancia> substancia = SubstanciaRepository.encontrarPorNome(subName);
+            if (substancia != null) {
+                sub.add(substancia.get(0));
+            } else {
+                System.out.println("Substância não encontrada");
+            }
+            System.out.println("Você deseja adicionar outra substância? (S/N) ");
+            String opcao = sc.nextLine();
+            if (!opcao.equalsIgnoreCase("s")) {
+                break;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("  ");
+            System.out.println("!!! Substância não encontrada !!!");
+            System.out.println("  ");
+            System.out.println("Veja se digitou corretamente");
+            System.out.println("  ou  ");
+            System.out.println("Saia e Cadastre Substância");
+            System.out.println("Digite 1 para sair ");
+            Scanner aux = new Scanner(System.in);
+            int a = aux.nextInt();
+            if (a == 1) {
+                return;
+            }
+        }
+    }
+    System.out.print("Digite o nome do remédio: ");
+    String nome = sc.nextLine();
+    System.out.println("Digite a data de validade do remédio (formato YYYY-MM-DD):");
+    LocalDate date = LocalDate.parse(sc.nextLine());
+    while (quantidade < 0) {
+        try {
+            System.out.print("Digite a quantidade de remédios em estoque: ");
+            quantidade = sc.nextInt();
+            if (quantidade < 0) {
+                System.out.println("Por favor, insira uma quantidade válida.");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Por favor, insira uma quantidade válida.");
+            sc.nextLine();
+        }
+    }
+    while (preco < 0) {
+        try {
+            System.out.print("Digite o preço do remédio: ");
+            preco = sc.nextFloat();
+            if (preco < 0) {
+                System.out.println("Por favor, insira um preço válido.");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Por favor, insira um preço válido.");
+            sc.nextLine();
+        }
+    }
+    while (concentracao < 0) {
+        try {
+            System.out.print("Digite a concentração do remédio: ");
+            concentracao = sc.nextFloat();
+            if (concentracao < 0) {
+                System.out.println("Por favor, insira uma concentração válida.");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Por favor, insira uma concentração válida.");
+            sc.nextLine();
+        }
+    }
+    System.out.print("Digite o modo de uso do remédio: ");
+    String modo_de_uso = sc.nextLine();
+    System.out.print("Qual é dosagem recomendada dele? ");
+    String dosagem = sc.nextLine();
+    System.out.printf("O remédio é:%n[1] Uso Oral,%n[2] Uso Tópico,%n[3] Injetável.%n>>> ");
+    byte res = 0;
+    while (res < 1 || res > 3) {
+        try {
+            res = Byte.parseByte(sc.nextLine());
+            if (res < 1 || res > 3) {
+                System.out.println("Por favor, digite uma opção válida.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Por favor, digite uma opção válida.");
+        }
+    }
+    Remedio remedio = null;
+    if (res == 1) {
+        remedio = new Oral(nome, date, preco, quantidade, concentracao, sub.get(0), modo_de_uso, dosagem);
+    } else if (res == 2) {
+        // Crie uma instância do remédio tópico aqui
+    } else if (res == 3) {
+        // Crie uma instância do remédio injetável aqui
+    }
+    RemedioRepository.save(remedio);
+    System.out.println("Remédio cadastrado!");
+}
+
 //_____________________________________________________________________________________________________________
 
 
@@ -29,17 +134,18 @@ public static void buscarRemedioPorNome(Scanner sc) {
     ArrayList<Remedio> remedios = RemedioRepository.encontrarPorNome(nome);
     if (!remedios.isEmpty()) {
         System.out.println("Remédios com o nome " + nome + " ");
-        System.out.println("_".repeat(61));
-        System.out.printf("%-20s | %-10s | %-10s | %-10s%n", "Nome", "Vencimento", "Quantidade", "Concentração");
-        System.out.println("_".repeat(61));
+        System.out.println("_".repeat(72));
+        System.out.printf("%-20s | %-10s | %-10s | %-10s | %-10s%n", "Nome", "Substância", "Vencimento", "Preço", "Em Estoque");
+        System.out.println("_".repeat(72));
         for (Remedio remedio : remedios) {
-            System.out.printf("%-20s | %-10s | %-10s | %-10s%nUso: %-12s %s%n%nDescrição:%n%s%n", remedio.getNome_remedio(), remedio.getSubstancia(), remedio.getData_vencimento().format(formatter), remedio.getPreco(), remedio.getQuantidade_estoque());
+            System.out.printf("%-20s | %-10s | %-10s | %-10.2f | %-10d%n", remedio.getNome_remedio(), remedio.getSubstancia().getNome_substancia(), remedio.getData_vencimento().format(formatter), remedio.getPreco(), remedio.getQuantidade_estoque());
         }
-        System.out.println("_".repeat(61));
+        System.out.println("_".repeat(72));
     } else {
         System.out.println("Remédio(s) não encontrado(s).");
     }
 }
+
 //_____________________________________________________________________________________________________________
 
 //BARRA DE PESQUISA -> Achar o remedio com o a substancia digitada ___________________________________________
@@ -49,13 +155,13 @@ public static void buscarRemedioPorSubstancia(Scanner sc) {
     ArrayList<Remedio> remedios = RemedioRepository.encontrarPorSubstancia(substancia);
     if (!remedios.isEmpty()) {
         System.out.println("Remédios com a substância " + substancia + " ");
-        System.out.println("_".repeat(61));
-        System.out.printf("%-20s | %-10s | %-10s | %-10s%n", "Nome", "Vencimento", "Quantidade", "Concentração");
-        System.out.println("_".repeat(61));
+        System.out.println("_".repeat(72));
+        System.out.printf("%-20s | %-10s | %-10s | %-10s | %-10s%n", "Nome", "Substância", "Vencimento", "Preço", "Em Estoque");
+        System.out.println("_".repeat(72));
         for (Remedio remedio : remedios) {
-            System.out.printf("%-20s | %-10s | %-10s | %-10s%nUso: %-12s %s%n%nDescrição:%n%s%n", remedio.getNome_remedio(), remedio.getSubstancia(), remedio.getData_vencimento().format(formatter), remedio.getPreco(), remedio.getQuantidade_estoque());
+            System.out.printf("%-20s | %-10s | %-10s | %-10.2f | %-10d%n", remedio.getNome_remedio(), remedio.getSubstancia().getNome_substancia(), remedio.getData_vencimento().format(formatter), remedio.getPreco(), remedio.getQuantidade_estoque());
         }
-        System.out.println("_".repeat(61));
+        System.out.println("_".repeat(72));
     } else {
         System.out.println("Remédio(s) não encontrado(s).");
     }
@@ -70,13 +176,13 @@ public static void buscarRemedioPorTipoSubstancia(Tipo tipo) {
     ArrayList<Remedio> remedios = RemedioRepository.encontrarPorRemedioPorTipoSubstancia(tipo);
     if (!remedios.isEmpty()) {
         System.out.println("Remédios com o tipo de substância " + tipo + " ");
-        System.out.println("_".repeat(61));
-        System.out.printf("%-20s | %-10s | %-10s | %-10s%n", "Nome", "Vencimento", "Quantidade", "Concentração");
-        System.out.println("_".repeat(61));
+        System.out.println("_".repeat(72));
+        System.out.printf("%-20s | %-10s | %-10s | %-10s | %-10s%n", "Nome", "Substância", "Vencimento", "Preço", "Em Estoque");
+        System.out.println("_".repeat(72));
         for (Remedio remedio : remedios) {
-            System.out.printf("%-20s | %-10s | %-10s | %-10s%nUso: %-12s %s%n%nDescrição:%n%s%n", remedio.getNome_remedio(), remedio.getSubstancia(), remedio.getData_vencimento().format(formatter), remedio.getPreco(), remedio.getQuantidade_estoque());
+            System.out.printf("%-20s | %-10s | %-10s | %-10.2f | %-10d%n", remedio.getNome_remedio(), remedio.getSubstancia().getNome_substancia(), remedio.getData_vencimento().format(formatter), remedio.getPreco(), remedio.getQuantidade_estoque());
         }
-        System.out.println("_".repeat(61));
+        System.out.println("_".repeat(72));
     } else {
         System.out.println("Remédio(s) não encontrado(s) para este tipo de substância.");
     }
@@ -90,13 +196,13 @@ public static void buscarRemedioPorTipoSubstancia(Tipo tipo) {
         ArrayList<Remedio> remedios = RemedioRepository.encontrarPorRemedioPorTipoRemedio(tipo);
         if (!remedios.isEmpty()) {
             System.out.println("Remédios do tipo " + tipo.getSimpleName() + ":");
-            System.out.println("_".repeat(61));
-            System.out.printf("%-20s | %-10s | %-10s | %-10s%n", "Nome", "Substância", "Vencimento", "Quantidade");
-            System.out.println("_".repeat(61));
+            System.out.println("_".repeat(72));
+            System.out.printf("%-20s | %-10s | %-10s | %-10s | %-10s%n", "Nome", "Substância", "Vencimento", "Preço", "Em Estoque");
+            System.out.println("_".repeat(72));
             for (Remedio remedio : remedios) {
-                System.out.printf("%-20s | %-10s | %-10s | %-10s%nUso: %-12s %n%nDescrição:%n%s%n", remedio.getNome_remedio(), remedio.getSubstancia(), remedio.getData_vencimento().format(formatter), remedio.getPreco(), remedio.getQuantidade_estoque());
+                System.out.printf("%-20s | %-10s | %-10s | %-10.2f | %-10d%n", remedio.getNome_remedio(), remedio.getSubstancia().getNome_substancia(), remedio.getData_vencimento().format(formatter), remedio.getPreco(), remedio.getQuantidade_estoque());
             }
-            System.out.println("_".repeat(61));
+            System.out.println("_".repeat(72));
         } else {
             System.out.println("Remédio(s) do tipo " + tipo.getSimpleName() + " não encontrado(s).");
         }
@@ -113,13 +219,13 @@ public static void buscarRemedioPorTipoSubstancia(Tipo tipo) {
         ArrayList<Remedio> remedios = RemedioRepository.encontrarPorValidade(validade);
         if (!remedios.isEmpty()) {
             System.out.println("Remédios com a data de vencimento " + validade + " ");
-            System.out.println("_".repeat(61));
-            System.out.printf("%-20s | %-10s | %-10s | %-10s%n", "Nome", "Vencimento", "Quantidade", "Concentração");
-            System.out.println("_".repeat(61));
+            System.out.println("_".repeat(72));
+            System.out.printf("%-20s | %-10s | %-10s | %-10s | %-10s%n", "Nome", "Substância", "Vencimento", "Preço", "Em Estoque");
+            System.out.println("_".repeat(72));
             for (Remedio remedio : remedios) {
-                System.out.printf("%-20s | %-10s | %-10s | %-10s%nUso: %-12s %s%n%nDescrição:%n%s%n", remedio.getNome_remedio(), remedio.getSubstancia(), remedio.getData_vencimento().format(formatter), remedio.getPreco(), remedio.getQuantidade_estoque());
+                System.out.printf("%-20s | %-10s | %-10s | %-10.2f | %-10d%n", remedio.getNome_remedio(), remedio.getSubstancia().getNome_substancia(), remedio.getData_vencimento().format(formatter), remedio.getPreco(), remedio.getQuantidade_estoque());
             }
-            System.out.println("_".repeat(61));
+            System.out.println("_".repeat(72));
         } else {
             System.out.println("Remédio(s) não encontrado(s).");
         }
