@@ -1,9 +1,7 @@
 package org.farmacia.repositories;
 
 
-import org.farmacia.entities.Remedio;
-import org.farmacia.entities.Substancia;
-import org.farmacia.entities.Tipo;
+import org.farmacia.entities.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,7 +18,7 @@ public class RemedioRepository {
     }
 //____________________________________________________________________________________________________________
 
-//BARRA DE PESQUISA -> Acha o remedio com o nome digitado ____________________________________________________
+//BARRA DE PESQUISA -> Achar o remedio com o nome digitado ____________________________________________________
     public static ArrayList<Remedio> encontrarPorNome(String nome) {
         ArrayList<Remedio> remediosPesquisados = new ArrayList<>();
         for (Remedio remedio : remedios) {
@@ -28,11 +26,12 @@ public class RemedioRepository {
                 remediosPesquisados.add(remedio);
             }
         }
+        System.out.println(remediosPesquisados);
         return remediosPesquisados;
     }
 //______________________________________________________________________________________________________________
 
-//BARRA DE PESQUISA -> Acha o remedio com o a data de vencimento digitada ______________________________________
+//BARRA DE PESQUISA -> Achar o remedio com o a data de vencimento digitada ______________________________________
     public static ArrayList<Remedio> encontrarPorValidade(LocalDate validade) {
         ArrayList<Remedio> remediosPesquisados = new ArrayList<>();
         for (Remedio remedio : remedios) {
@@ -44,7 +43,7 @@ public class RemedioRepository {
     }
 //____________________________________________________________________________________________________________
 
-//BARRA DE PESQUISA -> Acha o remedio com o a subatancia digitada ___________________________________________
+//BARRA DE PESQUISA -> Achar o remedio com o a substancia digitada ___________________________________________
     public static ArrayList<Remedio> encontrarPorSubstancia(String substancia) {
         ArrayList<Remedio> remediosEncontrados = new ArrayList<>();
         for (Remedio remedio : remedios) {
@@ -52,11 +51,12 @@ public class RemedioRepository {
             remediosEncontrados.add(remedio);
             }
         }
+        System.out.println(remediosEncontrados);
         return remediosEncontrados;
     }
 //____________________________________________________________________________________________________________
 
-//BARRA DE PESQUISA -> Acha o remedio com o tipo digitado ____________________________________________________
+//BARRA DE PESQUISA -> Achar o remedio com o tipo de substancia digitado ______________________________________
     public static ArrayList<Remedio> encontrarPorRemedioPorTipoSubstancia(Tipo tipo) {
         ArrayList<Remedio> remediosEncontrados = new ArrayList<>();
         for (Remedio remedio : remedios) {
@@ -66,7 +66,23 @@ public class RemedioRepository {
         }
         return remediosEncontrados;
     }
-//____________________________________________________________________________________________________________
+//___________________________________________________________________________________________________________
+
+//BARRA DE PESQUISA -> Achar o remedio com o tipo de remedio digitado _____________________________________
+
+    public static ArrayList<Remedio> encontrarPorRemedioPorTipoRemedio(Class tipo) {
+        ArrayList<Remedio> remediosTipo = new ArrayList<>();
+        for (Remedio remedio : remedios) {
+            if (tipo.isInstance(remedio)) {
+                remediosTipo.add(remedio);
+            } else {
+                System.out.println("Tipo de remedio não encontrado");
+            }
+        }
+        return remediosTipo;
+    }
+//___________________________________________________________________________________________________________
+
 
 //LISTAGEM -> Listar todos os remedios cadastrados ___________________________________________________________
     public static ArrayList<Remedio> encontrarTodosRemedios() {
