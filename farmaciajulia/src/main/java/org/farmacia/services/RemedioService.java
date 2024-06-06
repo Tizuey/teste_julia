@@ -359,19 +359,22 @@ public static void buscarRemedioPorNome(Scanner sc) {
         }
     }
 
-    public static void notafiscal(String med) {
-        String nome = med;
-        ArrayList<Remedio> remedios = RemedioRepository.encontrarPorNome(nome);
-        if (!remedios.isEmpty()) {
-            System.out.println("Remédios com o nome " + nome + " ");
-            System.out.println("_".repeat(72));
-            System.out.printf("%-20s | %-10s | ", "Nome", "Preço");
-            System.out.println("_".repeat(72));
-            for (Remedio remedio : remedios) {
-                System.out.printf("%-20s | %-10s |", remedio.getNome_remedio(),  remedio.getPreco());
+    public static void notafiscal(ArrayList<String> meds) {
+        for (String nome : meds) {
+            ArrayList<Remedio> remedios = RemedioRepository.encontrarPorNome(nome);
+            if (!remedios.isEmpty()) {
+                System.out.println("Remédios com o nome " + nome + " ");
+                System.out.println("_".repeat(72));
+                System.out.printf("%-20s | %-10s | ", "Nome", "Preço");
+                System.out.println("_".repeat(72));
+                for (Remedio remedio : remedios) {
+                    System.out.printf("%-20s | %-10s |", remedio.getNome_remedio(),  remedio.getPreco());
+                }
+                System.out.println("_".repeat(72));
+            } else {
+                System.out.println("Remédio(s) não encontrado(s).");
             }
-            System.out.println("_".repeat(72));
-        } 
+        }
     }
 
 
