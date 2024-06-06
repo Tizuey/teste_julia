@@ -41,4 +41,29 @@ public class SubstanciaRepository {
         return substancias;
     }
 
+    // Apagar Substancia através de seu nome
+    public static void removerSubstancia(String nome) {
+        ArrayList<Substancia> substanciasPesquisadas = encontrarPorNome(nome);
+        for (Substancia substancia : substanciasPesquisadas) {
+            if (Objects.equals(substancia.getNome_substancia().toLowerCase(), nome.toLowerCase())) {
+                substancias.remove(substancia);
+            } else {
+                System.out.println("Substância não encontrada.");
+            }
+        }
+    }
+    //CADASTRO - Atualizar substância -------------------------------------------------------------------------------
+    public static void atualizarSubstancia(String oldNome, Substancia novaSubstancia) {
+        ArrayList<Substancia> substanciasPesquisadas = encontrarPorNome(oldNome);
+        for (Substancia substancia : substanciasPesquisadas) {
+            if (Objects.equals(substancia.getNome_substancia().toLowerCase(), oldNome.toLowerCase())) {
+                substancia.setMeuTipo(novaSubstancia.getMeuTipo());
+                substancia.setNome_substancia(novaSubstancia.getNome_substancia());
+            } else {
+                System.out.println("Substância não encontrada.");
+            }
+        }
+    }
+
+
 }

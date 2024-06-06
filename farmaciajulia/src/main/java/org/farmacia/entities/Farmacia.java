@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Farmacia {
     public String nome_farmacia;
     public String cnpj;
-   // public ArrayList estoque = new ArrayList();
+    public int estoque ;
     public float saldo;
 
     public Farmacia(String nome_farmacia, String cnpj, float saldo) {

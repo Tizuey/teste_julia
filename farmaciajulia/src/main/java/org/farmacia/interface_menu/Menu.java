@@ -1,19 +1,21 @@
 package org.farmacia.interface_menu;
 
+import org.farmacia.repositories.RemedioRepository;
 import org.farmacia.services.RemedioService;
 import org.farmacia.entities.*;
+import org.farmacia.services.SubstanciaService;
 
 import java.util.Scanner;
 
 public class Menu {
 
-    // MENU INICIAL  --------------------------------------------------------------
-    public static void menuInicial() throws InterruptedException {
+// MENU INICIAL  --------------------------------------------------------------------------------------
+    public static void menuInicial()  {
         int respostaMenuInicial;
         Scanner sc1 = new Scanner(System.in);
         System.out.println(" ");
         System.out.println(" ");
-        System.out.println("Olá, Você é um   C L I E N T E   ou  nosso  A D M N I S T R A D O R  ? ");
+        System.out.println("Olá, Você é um   C L I E N T E   ou  nosso  A D M I N I S T R A D O R  ? ");
         System.out.println(" ----------------------------------------------------------------------");
         System.out.println(" ( Digite o número correspondente a opção desejado desejada )");
         System.out.println(" ");
@@ -29,7 +31,7 @@ public class Menu {
                 System.out.println("Você é Cliente");
                 break;
             case 2:
-                menuAdm();
+                senha();
                 break;
             case 3:
                 System.out.println(" ");
@@ -38,35 +40,49 @@ public class Menu {
                 break;
         }
     }
+//---------------------------------------------------------------------------------------------------
 
-    // BARRA DE PESQUISA --------------------------------------------------------------
-    public static void menuAdm() throws InterruptedException {
+// Senha para acessar o perfil de administrador -----------------------------------------------------
+    public static void senha()  {
+        int respostaAdmSenha;
+        Scanner sc = new Scanner(System.in);
+        do {
+            System.out.print("Digite a senha : ");
+            respostaAdmSenha = sc.nextInt();
+            if(respostaAdmSenha != 1234){
+                System.out.println("senha incorreta");
+                System.out.print(" Digite a senha  --> : ");
+            }
+        } while(respostaAdmSenha != 1234);
+        menuAdm();
+    }
+//---------------------------------------------------------------------------------------------------
+
+// MENU DE ADMINISTRADOR --------------------------------------------------------------
+    public static void menuAdm()  {
         int respostaTipoRemedio;
         Scanner sc3 = new Scanner(System.in);
         System.out.println(" ");
-        System.out.println("Bem Vindo, A D M N I S T R A D O R ");
+        System.out.println("Bem Vindo, A D M I N I S T R A D O R ");
         System.out.println(" ----------------------");
         System.out.println(" ");
-        System.out.println("Escolha pelo o que quer procurar o remedio ");
         System.out.println("[1] - Cadastro");
         System.out.println("[2] - Barra de Pesquisa");
         System.out.println("[3] - Vender Remédio");
         System.out.println("[4] - Comprar Remédio");
         System.out.println("[5] - Estoque");
-        System.out.println("[6] - Extratp");
-        System.out.println("[7] - Voltar ao Menu Inicial");
+        System.out.println("[6] - Extrato");
+        System.out.println("[7] - Sair");
         System.out.println(" ----------------------");
         System.out.print("  --> : ");
         respostaTipoRemedio = sc3.nextInt();
         Scanner cadastro = new Scanner(System.in);
         switch (respostaTipoRemedio) {
             case 1:
-                RemedioService.cadastrarRemedio(cadastro);
-                menuSair();
+                cadastro();
                 break;
             case 2:
                 barraDePesquisa();
-                menuSair();
                 break;
             case 3:
                 menuSair();
@@ -74,13 +90,66 @@ public class Menu {
             case 4:
                 menuInicial();
                 break;
+            case 5:
+                RemedioService.estoque();
+                break;
+        }
+    }
+//---------------------------------------------------------------------------------------------------
+
+// CADASTRO -----------------------------------------------------------------------------------------
+
+    public static void cadastro()  {
+        int respostaTipoRemedio;
+        Scanner sc3 = new Scanner(System.in);
+        System.out.println(" ");
+        System.out.println(" MENU CADASTRO ");
+        System.out.println(" ----------------------");
+        System.out.println(" ");
+        System.out.println("Escolha pelo o que quer procurar o remedio ");
+        System.out.println("[1] - Cadastrar Remédio");
+        System.out.println("[2] - Cadastar Substância");
+        System.out.println("[3] - ALterar Remédio");
+        System.out.println("[4] - Alterar Substância");
+        System.out.println("[5] - Remover Remédio");
+        System.out.println("[6] - Remover Substância");
+        System.out.println(" -------------------------");
+        System.out.print("  --> : ");
+        respostaTipoRemedio = sc3.nextInt();
+        Scanner cadastro = new Scanner(System.in);
+        switch (respostaTipoRemedio) {
+            case 1:
+                RemedioService.cadastrarRemedio(cadastro);
+                menuSairadm();
+                break;
+            case 2:
+                SubstanciaService.cadastrarSubstancia(cadastro);
+                menuSairadm();
+                break;
+            case 3:
+                RemedioService.atualizarRemedio(cadastro);
+                menuSairadm();
+                break;
+            case 4:
+                SubstanciaService.atualizarSubstancia(cadastro);
+                menuSairadm();
+                break;
+            case 5:
+                RemedioService.removerRemedio();
+                menuSairadm();
+                break;
+            case 6:
+                SubstanciaService.removerSubstancia();
+                menuSairadm();
+                break;
         }
     }
 
 
+//---------------------------------------------------------------------------------------------------
 
 // BARRA DE PESQUISA --------------------------------------------------------------
-    public static void barraDePesquisa() throws InterruptedException {
+    public static void barraDePesquisa() {
         int respostaBarraDePesquisa;
         Scanner sc3 = new Scanner(System.in);
         System.out.println(" ");
@@ -93,7 +162,10 @@ public class Menu {
         System.out.println("[3] - Tipo de Substância");
         System.out.println("[4] - Tipo de Remedio");
         System.out.println("[5] - Data de Vencimento");
-        System.out.println("[6] - Voltar ao Menu Inicial");
+        System.out.println(" ----------------------");
+        System.out.println("ou se quer trazer Todos os : ");
+        System.out.println("[6] - Remédios");
+        System.out.println("[7] - Substâncias");
         System.out.println(" ----------------------");
         System.out.print("  --> : ");
         respostaBarraDePesquisa = sc3.nextInt();
@@ -101,11 +173,11 @@ public class Menu {
         switch (respostaBarraDePesquisa) {
             case 1:
                 RemedioService.buscarRemedioPorNome(pesquisa);
-                menuSair();
+                menuSairadm();
                 break;
             case 2:
                 RemedioService.buscarRemedioPorSubstancia(pesquisa);
-                menuSair();
+                menuSairadm();
                 break;
             case 3:
                 tipoSubstancia();
@@ -115,17 +187,22 @@ public class Menu {
                 break;
             case 5:
                 RemedioService.buscarRemedioPorValidade(pesquisa);
-                menuSair();
+                menuSairadm();
+                break;
+            case 6:
+                RemedioRepository.encontrarTodosRemedios();
+                menuSairadm();
+                break;
+            case 7:
+                SubstanciaService.listarSubstancias();
+                menuSairadm();
                 break;
 
-            case 6:
-                menuInicial();
-                break;
         }
     }
 
-    // BARRA DE PESQUISA --------------------------------------------------------------
-    public static void tipoSubstancia() throws InterruptedException {
+// BARRA DE PESQUISA - Tipo de Substância--------------------------------------------------------------
+    public static void tipoSubstancia()  {
         int respostaTipoSubstancia;
         Scanner sc3 = new Scanner(System.in);
         System.out.println(" ");
@@ -182,8 +259,8 @@ public class Menu {
         }
     }
 
-    // BARRA DE PESQUISA --------------------------------------------------------------
-    public static void tipoRemedio() throws InterruptedException {
+// BARRA DE PESQUISA - Tipo Remedio --------------------------------------------------------------
+    public static void tipoRemedio()  {
         int respostaTipoRemedio;
         Scanner sc3 = new Scanner(System.in);
         System.out.println(" ");
@@ -217,8 +294,27 @@ public class Menu {
         }
     }
 
-// MENU SECUNDÁRIO OU SAIR --------------------------------------------------------------
-    public static void menuSair() throws InterruptedException {
+// MENU SECUNDÁRIO OU SAIR - (ADM)--------------------------------------------------------------
+    public static void menuSairadm()  {
+        int resposta2;
+        Scanner sc3 = new Scanner(System.in);
+        System.out.println(" ");
+        System.out.print("[1] - Voltar ao Menu   |   [2] - Sair   ");
+        System.out.print("  --> : ");
+        resposta2 = sc3.nextInt();
+        switch (resposta2) {
+            case 1:
+                menuAdm();
+                break;
+            case 2:
+                System.out.println(" ");
+                System.out.println("Volte Sempre");
+                sc3.close();
+                break;
+        }
+    }
+    // MENU SECUNDÁRIO OU SAIR - (CLIENTE)--------------------------------------------------------------
+    public static void menuSair()  {
         int resposta2;
         Scanner sc3 = new Scanner(System.in);
         System.out.println(" ");

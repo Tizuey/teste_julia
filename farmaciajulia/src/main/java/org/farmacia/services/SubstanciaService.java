@@ -5,6 +5,7 @@ import org.farmacia.entities.Tipo;
 import org.farmacia.repositories.SubstanciaRepository;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SubstanciaService {
@@ -19,6 +20,14 @@ public class SubstanciaService {
     Vitamina
      */
 
+
+// Adicionar na lista de substâncias-------------------------------------------
+    public static void save(Substancia sub) {
+        SubstanciaRepository.save(sub);
+    }
+//-----------------------------------------------------------------------------------
+
+//CADASTRO -> Cadastrar Remedio ____________________________________________________
     public static void cadastrarSubstancia(Scanner sc) {
         System.out.println("--- CADASTRO DE SUBSTANCIA ---");
         System.out.print("Digite o nome da substancia: ");
@@ -27,10 +36,69 @@ public class SubstanciaService {
         SubstanciaRepository.save(substancia);
         System.out.println("Substancia cadastrada com sucesso!");
     }
+//-----------------------------------------------------------------------------------
 
-    public static void save(Substancia sub) {
-        SubstanciaRepository.save(sub);
+//CADASTRO -> Remover Substancia ____________________________________________________
+
+    public static void removerSubstancia() {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            SubstanciaService.listarSubstancias();
+            System.out.print("Digite o nome da substância a ser removida :  ");
+            String nome = scanner.nextLine();
+            ArrayList<Substancia> substanciasPesquisadas = SubstanciaRepository.encontrarPorNome(nome);
+            System.out.println("Substância encontrada: " + substanciasPesquisadas.get(0));
+            if (!substanciasPesquisadas.isEmpty()) {
+                System.out.println("Você realmente deseja remover a substância? digite 1 para sim, 2 para não.");
+                System.out.print("[1] - Sim   |   [2] - Não  : ");
+                int confirmacao = scanner.nextInt();
+                switch (confirmacao) {
+                    case 1:
+                        System.out.println("Por favor, insira a senha de administrador para continuar:");
+                        String senha = scanner.next();
+                        if (senha.equals("senhaDoAdministrador")) {
+                            SubstanciaRepository.removerSubstancia(nome);
+                            System.out.println("Substância removida com sucesso!");
+                        } else {
+                            System.out.println("Senha incorreta. Ação cancelada.");
+                        }
+                        break;
+                    case 2:
+                        System.out.println("Ação cancelada pelo usuário.");
+                        break;
+                    default:
+                        System.out.println("Entrada inválida. Ação cancelada.");
+                        break;
+                }
+            } else {
+                System.out.println("Substância não encontrada.");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Entrada inválida. Ação cancelada.");
+        }
     }
+
+//-----------------------------------------------------------------------------------
+//CADASTRO -> Atualizar Substancia ____________________________________________________
+
+    public static void atualizarSubstancia(Scanner sc) {
+        System.out.println("-- ATUALIZAR SUBSTÂNCIA --");
+        System.out.print("Insira o nome antigo da substância: ");
+        String oldNome = sc.nextLine();
+        if (!SubstanciaRepository.encontrarPorNome(oldNome).isEmpty()) {
+            System.out.println("Agora insira as informações atualizadas.");
+            System.out.print("Digite o nome da substância: ");
+            String nome = sc.nextLine();
+            System.out.print("Qual é o tipo? ");
+            Tipo meuTipo = Tipo.valueOf(sc.nextLine());
+            Substancia substancia = new Substancia(meuTipo, nome);
+            SubstanciaRepository.atualizarSubstancia(oldNome, substancia);
+            System.out.println("Substância atualizada!");
+        } else {
+            System.out.println("Substância não encontrada.");
+        }
+    }
+//-----------------------------------------------------------------------------------
 
     public static void encontrarPorNome(Scanner sc) {
         System.out.print("Pesquisar pelo nome: ");
@@ -93,7 +161,6 @@ public class SubstanciaService {
         if (!substancias.isEmpty()) {
             System.out.print("SUBSTÂNCIAS CADASTRADAS ");
             System.out.println("_".repeat(10));
-            System.out.printf("%-12s %n", "Substância");
             for (Substancia substancia : substancias) {
                 System.out.printf("%-12s %n", substancia.getNome_substancia());
             }
@@ -102,5 +169,6 @@ public class SubstanciaService {
             System.out.println("Substâncias não encontradas.");
         }
     }
+
 }
 

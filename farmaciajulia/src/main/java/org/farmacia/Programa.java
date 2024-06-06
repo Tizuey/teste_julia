@@ -29,7 +29,7 @@ public class Programa {
         RemedioRepository.save(remedioOral);
         RemedioRepository.save(remedioInjetavel);
         RemedioRepository.save(remedioTopico);
-/*
+
     //_________________________________________________________________________________________________________________________________________
         System.out.println("  _____                                             _             _   _           _    __                      ");
         Thread.sleep(500);
@@ -57,7 +57,7 @@ public class Programa {
         // Interface Interativa com Usuário -> Menu.java
         Thread.sleep(500);
 
-*/
+
         Menu.menuInicial();
 
 

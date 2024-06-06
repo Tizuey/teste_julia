@@ -90,22 +90,21 @@ public class RemedioRepository {
 
 
 
-    //atualizarRemedio(String nome, String farmaceutica, String novoNome, Date dataVencimento, int quantidade,float concentracao, Farmaceutica novaFarmaceutica): void -> Atualiza remédio x de farmaceutica y com os dados passados.
-    public static void atualizarRemedio(String nome, String novoNome, Float preco, LocalDate dataVencimento, int quantidade,
-                                        float concentracao, Substancia substancia) {
-        ArrayList<Remedio> remediosPesquisados = encontrarPorNome(nome);
-        for (Remedio remedio : remediosPesquisados) {
-            if (Objects.equals(remedio.getNome_remedio().toLowerCase(), substancia.getNome_substancia().toLowerCase())) {
-                remedio.setNome_remedio(novoNome);
-                remedio.setData_vencimento(dataVencimento);
-                remedio.setPreco(preco);
-                remedio.setQuantidade_estoque(quantidade);
-                remedio.setConcentracao(concentracao);
-            } else {
-                System.out.println("Remédio não encontrado.");
-            }
+//CADASTRO - Atualizar remedio -------------------------------------------------------------------------------
+public static void atualizarRemedio(String oldNome, Remedio novoRemedio) {
+    ArrayList<Remedio> remediosPesquisados = encontrarPorNome(oldNome);
+    for (Remedio remedio : remediosPesquisados) {
+        if (Objects.equals(remedio.getNome_remedio().toLowerCase(), oldNome.toLowerCase())) {
+            remedio.setNome_remedio(novoRemedio.getNome_remedio());
+            remedio.setData_vencimento(novoRemedio.getData_vencimento());
+            remedio.setPreco(novoRemedio.getPreco());
+            remedio.setQuantidade_estoque(novoRemedio.getQuantidade_estoque());
+            remedio.setConcentracao(novoRemedio.getConcentracao());
+        } else {
+            System.out.println("Remédio não encontrado.");
         }
     }
+}
 
     //Apagar Remedio através de seu nome
     public static void removerRemedio(String nome) {
@@ -118,7 +117,6 @@ public class RemedioRepository {
             }
         }
     }
-
 
 
 
