@@ -5,7 +5,6 @@ import org.farmacia.repositories.RemedioRepository;
 import org.farmacia.repositories.SubstanciaRepository;
 
 import java.time.LocalDate;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -359,18 +358,39 @@ public static void buscarRemedioPorNome(Scanner sc) {
         }
     }
 
+    public static Remedio buscarRemedioPorNome3(String sc) {
+        String nome = sc;
+        ArrayList<Remedio> remedios = RemedioRepository.encontrarPorNome(nome);
+
+        if(!remedios.isEmpty()) {
+            System.out.println("Remédios com o nome " + nome + " ");
+            System.out.println("_".repeat(72));
+            System.out.printf("%-20s | %-10s |", "Nome",  "Preço");
+            System.out.println("_".repeat(72));
+            for (Remedio remedio : remedios) {
+                System.out.printf("%-20s | %-10s |", remedio.getNome_remedio(),  remedio.getPreco());
+            }
+            System.out.println("_".repeat(72));
+
+            return remedios.getFirst();
+        } else {
+            System.out.println("No medicines found with the name " + nome);
+            return null;
+        }
+    }
+
+
+
     public static void notafiscal(ArrayList<String> meds) {
         for (String nome : meds) {
             ArrayList<Remedio> remedios = RemedioRepository.encontrarPorNome(nome);
             if (!remedios.isEmpty()) {
-                System.out.println("Remédios com o nome " + nome + " ");
-                System.out.println("_".repeat(72));
+                System.out.println("_".repeat(62));
                 System.out.printf("%-20s | %-10s | ", "Nome", "Preço");
-                System.out.println("_".repeat(72));
+
                 for (Remedio remedio : remedios) {
                     System.out.printf("%-20s | %-10s |", remedio.getNome_remedio(),  remedio.getPreco());
                 }
-                System.out.println("_".repeat(72));
             } else {
                 System.out.println("Remédio(s) não encontrado(s).");
             }
@@ -462,19 +482,61 @@ public static void buscarRemedioPorTipoSubstancia(Tipo tipo) {
             System.out.println("Remédio(s) não encontrado(s).");
         }
     }
-//_____________________________________________________________________________________________________________
-public static int estoque() {
-    List<Remedio> remedios = RemedioRepository.encontrarTodosRemedios();
-    int total = 0;
-    for (Remedio remedio : remedios) {
-        total += remedio.getQuantidade_estoque();
-        System.out.println( "Nome do remedio: " + remedio.getNome_remedio() );
-        System.out.println(" Quantidade em estoque: " + remedio.getQuantidade_estoque() );
-        System.out.println(" ----------------------");
-        System.out.println(" ");
+//__________________________________________________________________________
+
+// ESTOQUE --------------------------------------------------------------
+    public static int estoque() {
+        List<Remedio> remedios = RemedioRepository.encontrarTodosRemedios();
+        int total = 0;
+        for (Remedio remedio : remedios) {
+            total += remedio.getQuantidade_estoque();
+            System.out.println( "Nome do remedio: " + remedio.getNome_remedio() );
+            System.out.println(" Quantidade em estoque: " + remedio.getQuantidade_estoque() );
+            System.out.println(" ----------------------");
+            System.out.println(" ");
+        }
+        System.out.println("No estoque tem: " + total);
+        return total;
     }
-    System.out.println("No estoque tem: " + total);
-    return total;
-}
+//__________________________________________________________________________
+
+// COMPRAR REMEDIO--------------------------------------------------------------
+    public static void comprarRemedio() {
+        System.out.print("Digite o nome do remédio a comprar: ");
+        Scanner sc4 = new Scanner(System.in);
+        String nome = sc4.nextLine();
+        Remedio remedio = RemedioService.buscarRemedioPorNome3(nome);
+        if (remedio != null) {
+            System.out.println("É esse remedio que você deseja comprar: ");
+            System.out.println("[1] - Sim   |   [2] - Não  ");
+            System.out.print("  --> : ");
+            int resposta;
+            Scanner sc = new Scanner(System.in);
+            resposta = sc.nextInt();
+            if(resposta == 1) {
+                System.out.print("Digite a quantidade a comprar: ");
+                int quantidade = sc.nextInt();
+                remedio.setQuantidade_estoque(remedio.getQuantidade_estoque() + quantidade);
+                System.out.println("Compra realizada com sucesso!");
+            }
+        } else {
+            System.out.println("Remédio não encontrado.");
+        }
+    }
+
+    public static void listarRemedios() {
+        ArrayList<Remedio> remedios = RemedioRepository.encontrarTodosRemedios();
+        if (!remedios.isEmpty()) {
+            System.out.print("REMÉDIOS CADASTRADOS ");
+            System.out.println("_".repeat(10));
+            for (Remedio remedio : remedios) {
+                System.out.printf("%-12s %n", remedio.getNome_remedio());
+            }
+            System.out.println("_".repeat(40));
+        } else {
+            System.out.println("Remédios não encontrados.");
+        }
+    }
+
 
 }

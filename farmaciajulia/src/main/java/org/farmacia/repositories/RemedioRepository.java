@@ -19,15 +19,15 @@ public class RemedioRepository {
 //____________________________________________________________________________________________________________
 
 //BARRA DE PESQUISA -> Achar o remedio com o nome digitado ____________________________________________________
-    public static ArrayList<Remedio> encontrarPorNome(String nome) {
-        ArrayList<Remedio> remediosPesquisados = new ArrayList<>();
-        for (Remedio remedio : remedios) {
-            if (Objects.equals(remedio.nome_remedio.toLowerCase(), nome.toLowerCase())) {
-                remediosPesquisados.add(remedio);
-            }
+public static ArrayList<Remedio> encontrarPorNome(String nome) {
+    ArrayList<Remedio> remediosPesquisados = new ArrayList<>();
+    for (Remedio remedio : remedios) {
+        if (remedio.nome_remedio.trim().toLowerCase().equals(nome.toLowerCase())) {
+            remediosPesquisados.add(remedio);
         }
-        return remediosPesquisados;
     }
+    return remediosPesquisados;
+}
 //______________________________________________________________________________________________________________
 
 //BARRA DE PESQUISA -> Achar o remedio com o a data de vencimento digitada ______________________________________
